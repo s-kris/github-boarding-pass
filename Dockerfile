@@ -19,5 +19,8 @@ ENV NODE_ENV=production
 
 EXPOSE 4321
 
-# Start the server
-CMD ["node", "./dist/server/entry.mjs", "--host", "0.0.0.0"]
+# Copy and use the custom start script
+COPY start.mjs .
+
+# Start the server using the custom script
+CMD ["node", "start.mjs"]
