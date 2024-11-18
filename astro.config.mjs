@@ -7,6 +7,8 @@ export default defineConfig({
   integrations: [tailwind(), react()],
   output: 'server',
   adapter: node({
-    mode: 'standalone' // 'standalone' is best for production deployments
+    mode: 'standalone',
+    host: '0.0.0.0',
+    port: 4321
   })
 });
