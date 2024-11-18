@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchForm from '../components/SearchForm';
+import BoardingPass from '../components/BoardingPass';
+import { Github } from 'lucide-react';
+---
+
+<Layout title="GitHub Boarding Pass">
+  <main class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <Github className="w-8 h-8" />
+          <h1 class="text-3xl font-bold">GitHub Boarding Pass</h1>
+        </div>
+        <p class="text-gray-400">Enter a GitHub username or profile URL to generate their boarding pass</p>
+      </div>
+
+      <SearchForm client:load />
+    </div>
+  </main>
+</Layout>
