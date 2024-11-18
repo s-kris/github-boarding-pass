@@ -1,30 +1,15 @@
-FROM node:18-alpine
+FROM node:18-alpine as builder
+
+COPY package.json /tmp/package.json
+RUN cd /tmp && yarn install --ignore-engines
+RUN mkdir -p /usr/src/app && cp -a /tmp/node_modules /usr/src/app/
 
 WORKDIR /usr/src/app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-# Debug: Show current directory contents before build
-RUN ls -la
-
-RUN npm run build
-
-# Debug: Show directory contents after build
-RUN ls -la
-RUN ls -la dist || echo "No dist directory"
-RUN ls -la dist/server || echo "No dist/server directory"
-
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY . /usr/src/app
+RUN yarn build
+ENV NODE_ENV production
+ENV PORT 4321
 EXPOSE 4321
 
-ENV HOST=0.0.0.0
-ENV PORT=4321
-
-# Add a healthcheck to verify the server is running
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:4321/ || exit 1
-
-# Use a shell script to check the file exists before starting
-CMD sh -c '[ -f "./dist/server/entry.mjs" ] && node ./dist/server/entry.mjs || (echo "entry.mjs not found" && ls -la ./dist/server/)' 
+CMD ["npm", "start"]
