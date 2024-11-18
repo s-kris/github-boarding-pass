@@ -22,5 +22,9 @@ EXPOSE 4321
 # Copy and use the custom start script
 COPY start.mjs .
 
+# Use tini as init system
+RUN apk add --no-cache tini
+ENTRYPOINT ["/sbin/tini", "--"]
+
 # Start the server using the custom script
 CMD ["node", "start.mjs"]
