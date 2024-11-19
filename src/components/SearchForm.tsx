@@ -12,8 +12,12 @@ export default function SearchForm() {
   const [urlLoading, setUrlLoading] = useState(true);
   const [error, setError] = useState('');
   const boardingPassRef = useRef<HTMLDivElement>(null);
+  const [hasSearchParams, setHasSearchParams] = useState(false);
 
   useEffect(() => {
+    // Set search params check after mount
+    setHasSearchParams(window.location.search !== '');
+
     // Check URL parameters on mount
     const urlParams = new URLSearchParams(window.location.search);
     const urlStats = urlParams.get('stats');
@@ -126,7 +130,7 @@ export default function SearchForm() {
         }}
       />
       
-      {urlLoading && window.location.search ? (
+      {urlLoading && hasSearchParams ? (
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-8 h-8 animate-spin text-[#C4002B]" />
