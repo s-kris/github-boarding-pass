@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Loader2, Download } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Loader2, Download, Share2 } from 'lucide-react';
 import BoardingPass from './BoardingPass';
 import type { GithubStats } from '../types';
 import html2canvas from 'html2canvas';
@@ -10,6 +10,23 @@ export default function SearchForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const boardingPassRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check URL parameters on mount
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlStats = urlParams.get('stats');
+    
+    if (urlStats) {
+      try {
+        const decodedStats = JSON.parse(atob(urlStats));
+        decodedStats.joinDate = new Date(decodedStats.joinDate);
+        setStats(decodedStats);
+        setUsername(decodedStats.username);
+      } catch (err) {
+        setError('Invalid share URL');
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +45,9 @@ export default function SearchForm() {
       // Convert joinDate string to Date object
       data.joinDate = new Date(data.joinDate);
       setStats(data);
+      // Update URL with encoded stats
+      const encodedStats = btoa(JSON.stringify(data));
+      window.history.pushState({}, '', `?stats=${encodedStats}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch GitHub stats');
     } finally {
@@ -44,6 +64,18 @@ export default function SearchForm() {
     link.download = `${stats.username}-github-boarding-pass.png`;
     link.href = url;
     link.click();
+  };
+
+  const handleShare = async () => {
+    if (!stats) return;
+    
+    const currentUrl = window.location.href;
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      alert('Share URL copied to clipboard!');
+    } catch (err) {
+      alert('Failed to copy URL to clipboard');
+    }
   };
 
   return (
@@ -89,6 +121,13 @@ export default function SearchForm() {
             >
               <Download className="w-4 h-4" />
               Download Pass
+            </button>
+            <button
+              onClick={handleShare}
+              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition flex items-center gap-2 text-white"
+            >
+              <Share2 className="w-4 h-4" />
+              Share Pass
             </button>
           </div>
         </>
