@@ -14,10 +14,11 @@ import { Github } from "lucide-react";
           <Github className="w-8 h-8" />
           <h1 class="text-3xl font-bold">GitHub Boarding Pass</h1>
         </div>
-        <p class="text-gray-400 mb-8">
+        <p class="text-gray-400">
           Enter a GitHub username or profile URL to generate their boarding pass
         </p>
-        <div class="flex justify-center mb-8">
+        <br />
+        <div class="flex justify-center">
           <iframe
             src="https://ghbtns.com/github-btn.html?user=s-kris&repo=github-boarding-pass&type=star&count=true&size=large"
             frameborder="0"
@@ -28,6 +29,7 @@ import { Github } from "lucide-react";
           >
           </iframe>
         </div>
+        <br />
       </div>
 
       <SearchForm client:load />
