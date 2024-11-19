@@ -20,16 +20,16 @@ import { Github } from "lucide-react";
       </div>
 
       {/* Add GitHub Star Button */}
-      <div class="text-center mb-8">
-        <a
-          href="https://github.com/s-kris/github-boarding-pass"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+      <div class="flex justify-center mb-8">
+        <iframe
+          src="https://ghbtns.com/github-btn.html?user=s-kris&repo=github-boarding-pass&type=star&count=true&size=large"
+          frameborder="0"
+          scrolling="0"
+          width="170"
+          height="30"
+          title="GitHub"
         >
-          <Github className="w-5 h-5" />
-          <span class="font-medium">Star on GitHub</span>
-        </a>
+        </iframe>
       </div>
 
       <SearchForm client:load />
