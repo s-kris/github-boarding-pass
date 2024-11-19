@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-const GITHUB_TOKEN = import.meta.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = import.meta.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
 
 export const GET: APIRoute = async ({ url }) => {
   const username = url.searchParams.get('username');
