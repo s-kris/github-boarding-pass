@@ -22,6 +22,9 @@ export const GET: APIRoute = async ({ url }) => {
     'Authorization': `Bearer ${GITHUB_TOKEN}`
   };
 
+  console.log('Token exists:', !!GITHUB_TOKEN);
+  console.log('Token prefix:', GITHUB_TOKEN?.substring(0, 4));
+
   try {
     const [userResponse, reposResponse] = await Promise.all([
       fetch(`https://api.github.com/users/${cleanUsername}`, { headers }),
@@ -39,6 +42,7 @@ export const GET: APIRoute = async ({ url }) => {
       console.error('GitHub API Error:', {
         status: userResponse.status,
         statusText: userResponse.statusText,
+        headers: Object.fromEntries(userResponse.headers),
         error: errorData
       });
       return new Response(`Failed to fetch user data: ${userResponse.statusText}`, {
