@@ -18,15 +18,18 @@ export default function SearchForm() {
     const urlParams = new URLSearchParams(window.location.search);
     const urlStats = urlParams.get('stats');
     
-    if (urlStats) {
-      try {
-        const decodedStats = JSON.parse(atob(urlStats));
-        decodedStats.joinDate = new Date(decodedStats.joinDate);
-        setStats(decodedStats);
-        setUsername(decodedStats.username);
-      } catch (err) {
-        setError('Invalid share URL');
-      }
+    if (!urlStats) {
+      setUrlLoading(false);
+      return;
+    }
+
+    try {
+      const decodedStats = JSON.parse(atob(urlStats));
+      decodedStats.joinDate = new Date(decodedStats.joinDate);
+      setStats(decodedStats);
+      setUsername(decodedStats.username);
+    } catch (err) {
+      setError('Invalid share URL');
     }
     setUrlLoading(false);
   }, []);
@@ -123,7 +126,7 @@ export default function SearchForm() {
         }}
       />
       
-      {urlLoading ? (
+      {urlLoading && window.location.search ? (
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-8 h-8 animate-spin text-[#C4002B]" />
