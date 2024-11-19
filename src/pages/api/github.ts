@@ -4,13 +4,13 @@ const GITHUB_TOKEN = import.meta.env.GITHUB_TOKEN;
 
 export const GET: APIRoute = async ({ url }) => {
   const username = url.searchParams.get('username');
-  
+
   if (!username) {
     return new Response('Username is required', { status: 400 });
   }
 
-  const cleanUsername = username.includes('github.com') 
-    ? username.split('/').filter(Boolean).pop() 
+  const cleanUsername = username.includes('github.com')
+    ? username.split('/').filter(Boolean).pop()
     : username;
 
   if (!cleanUsername) {
@@ -35,7 +35,15 @@ export const GET: APIRoute = async ({ url }) => {
       return new Response('API rate limit exceeded. Please try again later.', { status: 403 });
     }
     if (!userResponse.ok) {
-      return new Response('Failed to fetch user data', { status: 500 });
+      const errorData = await userResponse.json().catch(() => ({}));
+      console.error('GitHub API Error:', {
+        status: userResponse.status,
+        statusText: userResponse.statusText,
+        error: errorData
+      });
+      return new Response(`Failed to fetch user data: ${userResponse.statusText}`, {
+        status: userResponse.status || 500
+      });
     }
 
     const userData = await userResponse.json();
@@ -48,12 +56,12 @@ export const GET: APIRoute = async ({ url }) => {
           `https://api.github.com/repos/${cleanUsername}/${repo.name}/stats/contributors`,
           { headers }
         );
-        
+
         if (!statsResponse.ok) return 0;
-        
+
         const stats = await statsResponse.json();
         const userStats = stats.find((s: any) => s.author.login === cleanUsername);
-        
+
         return userStats ? userStats.total : 0;
       } catch {
         return 0;
