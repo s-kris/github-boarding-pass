@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Loader2, Download, Share2 } from 'lucide-react';
+import { Loader2, Download, Share2, Check } from 'lucide-react';
 import BoardingPass from './BoardingPass';
 import type { GithubStats } from '../types';
 import html2canvas from 'html2canvas';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function SearchForm() {
   const [username, setUsername] = useState('');
@@ -72,14 +73,55 @@ export default function SearchForm() {
     const currentUrl = window.location.href;
     try {
       await navigator.clipboard.writeText(currentUrl);
-      alert('Share URL copied to clipboard!');
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? 'animate-enter' : 'animate-leave'
+          } max-w-md w-full bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+        >
+          <div className="flex-1 w-0 p-4">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 pt-0.5">
+                <Check className="h-5 w-5 text-green-500" />
+              </div>
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-medium text-gray-100">
+                  Share URL copied to clipboard!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex border-l border-gray-700">
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-gray-400 hover:text-gray-200 focus:outline-none"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      ), {
+        duration: 2000,
+        position: 'top-center',
+      });
     } catch (err) {
-      alert('Failed to copy URL to clipboard');
+      toast.error('Failed to copy URL to clipboard');
     }
   };
 
   return (
     <>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 2000,
+          style: {
+            background: '#C4002B',
+            color: '#fff',
+          },
+        }}
+      />
+      
       <form onSubmit={handleSubmit} className="max-w-xl mx-auto mb-10">
         <div className="flex gap-2">
           <input
