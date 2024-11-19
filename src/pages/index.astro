@@ -9,7 +9,7 @@ import { Github } from "lucide-react";
     class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6"
   >
     <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-10">
+      <div class="text-center mb-6">
         <div class="flex items-center justify-center gap-2 mb-4">
           <Github className="w-8 h-8" />
           <h1 class="text-3xl font-bold">GitHub Boarding Pass</h1>
@@ -17,6 +17,27 @@ import { Github } from "lucide-react";
         <p class="text-gray-400">
           Enter a GitHub username or profile URL to generate their boarding pass
         </p>
+      </div>
+      <div class="max-w-4xl mx-auto">
+        {/* Add GitHub Link */}
+        <div class="text-center mb-8">
+          <a
+            href="https://github.com/s-kris/github-boarding-pass"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-white hover:text-gray-200 transition-colors"
+          >
+            <Github className="w-5 h-5" />
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+
+        {/* Boarding Pass */}
+        <div
+          class="flex bg-white rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+        >
+          {/* Rest of your boarding pass code ... */}
+        </div>
       </div>
 
       <SearchForm client:load />
