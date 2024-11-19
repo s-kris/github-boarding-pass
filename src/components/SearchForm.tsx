@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Loader2, Download } from 'lucide-react';
 import BoardingPass from './BoardingPass';
 import type { GithubStats } from '../types';
+import html2canvas from 'html2canvas';
 
 export default function SearchForm() {
   const [username, setUsername] = useState('');
   const [stats, setStats] = useState<GithubStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const boardingPassRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +33,17 @@ export default function SearchForm() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownload = async () => {
+    if (!boardingPassRef.current || !stats) return;
+    
+    const canvas = await html2canvas(boardingPassRef.current);
+    const url = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = `${stats.username}-github-boarding-pass.png`;
+    link.href = url;
+    link.click();
   };
 
   return (
@@ -64,7 +77,22 @@ export default function SearchForm() {
         )}
       </form>
 
-      {stats && <BoardingPass stats={stats} />}
+      {stats && (
+        <>
+          <div ref={boardingPassRef}>
+            <BoardingPass stats={stats} />
+          </div>
+          <div className="flex justify-center gap-4 mt-6">
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition flex items-center gap-2 text-white"
+            >
+              <Download className="w-4 h-4" />
+              Download Pass
+            </button>
+          </div>
+        </>
+      )}
 
       {!stats && !loading && (
         <div className="text-center text-gray-400 mt-20">
