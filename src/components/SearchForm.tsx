@@ -9,6 +9,7 @@ export default function SearchForm() {
   const [username, setUsername] = useState('');
   const [stats, setStats] = useState<GithubStats | null>(null);
   const [loading, setLoading] = useState(false);
+  const [urlLoading, setUrlLoading] = useState(true);
   const [error, setError] = useState('');
   const boardingPassRef = useRef<HTMLDivElement>(null);
 
@@ -27,6 +28,7 @@ export default function SearchForm() {
         setError('Invalid share URL');
       }
     }
+    setUrlLoading(false);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,64 +123,75 @@ export default function SearchForm() {
         }}
       />
       
-      <form onSubmit={handleSubmit} className="max-w-xl mx-auto mb-10">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="e.g., octocat or https://github.com/octocat"
-            className="flex-1 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition text-white"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-white"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              'Generate Pass'
-            )}
-          </button>
+      {urlLoading ? (
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="w-8 h-8 animate-spin text-[#C4002B]" />
+            <p className="text-gray-400">Loading boarding pass...</p>
+          </div>
         </div>
-        {error && (
-          <p className="mt-2 text-red-400 text-sm">{error}</p>
-        )}
-      </form>
-
-      {stats && (
+      ) : (
         <>
-          <div ref={boardingPassRef}>
-            <BoardingPass stats={stats} />
-          </div>
-          <div className="flex justify-center gap-4 mt-6">
-            <button
-              onClick={handleDownload}
-              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition flex items-center gap-2 text-white"
-            >
-              <Download className="w-4 h-4" />
-              Download Pass
-            </button>
-            <button
-              onClick={handleShare}
-              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition flex items-center gap-2 text-white"
-            >
-              <Share2 className="w-4 h-4" />
-              Share Pass
-            </button>
-          </div>
-        </>
-      )}
+          <form onSubmit={handleSubmit} className="max-w-xl mx-auto mb-10">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="e.g., octocat or https://github.com/octocat"
+                className="flex-1 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition text-white"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-white"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Generate Pass'
+                )}
+              </button>
+            </div>
+            {error && (
+              <p className="mt-2 text-red-400 text-sm">{error}</p>
+            )}
+          </form>
 
-      {!stats && !loading && (
-        <div className="text-center text-gray-400 mt-20">
-          <p className="text-lg mb-4">Enter a GitHub username to view their developer boarding pass</p>
-          <p className="text-sm">Includes repository stats, commit history, and more!</p>
-        </div>
+          {stats && (
+            <>
+              <div ref={boardingPassRef}>
+                <BoardingPass stats={stats} />
+              </div>
+              <div className="flex justify-center gap-4 mt-6">
+                <button
+                  onClick={handleDownload}
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition flex items-center gap-2 text-white"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Pass
+                </button>
+                <button
+                  onClick={handleShare}
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition flex items-center gap-2 text-white"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Share Pass
+                </button>
+              </div>
+            </>
+          )}
+
+          {!stats && !loading && (
+            <div className="text-center text-gray-400 mt-20">
+              <p className="text-lg mb-4">Enter a GitHub username to view their developer boarding pass</p>
+              <p className="text-sm">Includes repository stats, commit history, and more!</p>
+            </div>
+          )}
+        </>
       )}
     </>
   );
