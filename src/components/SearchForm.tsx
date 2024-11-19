@@ -77,24 +77,27 @@ export default function SearchForm() {
         <div
           className={`${
             t.visible ? 'animate-enter' : 'animate-leave'
-          } max-w-md w-full bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          } max-w-md w-full bg-[#C4002B] shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
         >
           <div className="flex-1 w-0 p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0 pt-0.5">
-                <Check className="h-5 w-5 text-green-500" />
+                <Check className="h-5 w-5 text-white" />
               </div>
               <div className="ml-3 flex-1">
-                <p className="text-sm font-medium text-gray-100">
+                <p className="text-sm font-medium text-white">
                   Share URL copied to clipboard!
                 </p>
               </div>
             </div>
           </div>
-          <div className="flex border-l border-gray-700">
+          <div className="flex border-l border-opacity-20 border-white">
             <button
-              onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-gray-400 hover:text-gray-200 focus:outline-none"
+              onClick={() => {
+                toast.dismiss(t.id);
+                toast.remove(t.id);
+              }}
+              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-white hover:bg-opacity-80 focus:outline-none"
             >
               Close
             </button>
@@ -102,7 +105,7 @@ export default function SearchForm() {
         </div>
       ), {
         duration: 2000,
-        position: 'top-center',
+        position: 'bottom-center',
       });
     } catch (err) {
       toast.error('Failed to copy URL to clipboard');
@@ -112,13 +115,9 @@ export default function SearchForm() {
   return (
     <>
       <Toaster 
-        position="top-center"
+        position="bottom-center"
         toastOptions={{
           duration: 2000,
-          style: {
-            background: '#C4002B',
-            color: '#fff',
-          },
         }}
       />
       
